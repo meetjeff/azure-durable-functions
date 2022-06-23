@@ -16,8 +16,8 @@ async def main(req: func.HttpRequest, starter: str) -> func.HttpResponse:
     client = df.DurableOrchestrationClient(starter)
     
     w = req.params.get('website')
-    if w not in ['yourator','104','518','1111','meetjob','linkedin']:
-        return func.HttpResponse('請選擇以下平台:yourator、104、518、1111、meetjob、linkedin')
+    if w not in ['yourator','104','518','1111']:
+        return func.HttpResponse('請選擇以下平台:yourator、104、518、1111')
 
 
     s = req.params.get('search')
