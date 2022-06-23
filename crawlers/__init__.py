@@ -3,10 +3,8 @@
 
 import logging
 import json
-
 import azure.functions as func
 import azure.durable_functions as df
-
 
 def orchestrator_function(context: df.DurableOrchestrationContext):
     website=json.loads(context.get_input())["website"]
