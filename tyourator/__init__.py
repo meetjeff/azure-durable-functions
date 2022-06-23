@@ -1,6 +1,5 @@
 import datetime
 import logging
-
 import azure.functions as func
 import time,random
 import requests
@@ -9,7 +8,6 @@ import pymysql
 from bs4 import  BeautifulSoup as bs
 import cn2an
 import nums_from_string as nfs
-
 
 def SalNum(i):
     ex = i
@@ -127,7 +125,6 @@ def main(mytimer: func.TimerRequest) -> None:
     cursor.close()
     conn.close()
     logging.info('已更新'+str(pstop)+'頁查詢至Yourator')
-
 
     if mytimer.past_due:
         logging.info('The timer is past due!')
