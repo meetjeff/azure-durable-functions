@@ -12,8 +12,47 @@ import requests
 import json
 import pymysql
 from bs4 import  BeautifulSoup as bs
+import cn2an
+import nums_from_string as nfs
 
-def main(ser :str) -> str:
+
+def SalNum(i):
+    ex = i
+    ex1 = ex.replace(",", ".")
+    ex2 = cn2an.transform(ex1)
+    if "萬" in ex2:
+        number = nfs.get_nums(ex2)
+        Number=[]
+        for i in number:
+            num = i*10000
+            Number.append(round(num))
+        return Number
+    else:
+        Number=[]
+        number = nfs.get_nums(ex2.replace(".", ""))
+        for i in number:
+            num = i
+            Number.append(round(num))
+        return Number
+
+def ave(i):
+    if len(i) == 2:
+        num = 0
+        for a in i:
+            num = num+a
+            Sal = round(num/2)
+        return Sal
+    else:
+        Sal = round(i[0])
+        return Sal
+
+def annual(i):
+    if i < 400000:
+        return i*14
+    else:
+        return i
+
+def main(ser:str) -> str:
     jdata=json.loads(ser)
     sp=jdata['search'].replace('、','&term[]=')
     rp=jdata['page']
@@ -25,7 +64,6 @@ def main(ser :str) -> str:
         "port": 3306,
         "user": "jeff",
         "password": "@a0987399832",
-        "charset": "utf8"
     }
     conn = pymysql.connect(**db_settings)
     cursor = conn.cursor()
@@ -36,10 +74,10 @@ def main(ser :str) -> str:
             break
         for n in range(len(res)):
             try:
-                cursor.execute("insert career.yourator(id,job,location,lastupdate,company,salary) values({},'{}','{}','{}','{}','{}') on duplicate key update job=values(job),location=values(location),lastupdate=values(lastupdate),company=values(company),salary=values(salary);".format(res[n]["id"],res[n]["name"],res[n]["city"],res[n]["category"]["updated_at"],res[n]["company"]["brand"],res[n]["salary"]))
+                cursor.execute("insert career.newjob(id,job,location,lastupdate,company,annualsalary,salary,education,website) values('{}','{}','{}','{}','{}','{}','{}','不拘','yourator') on duplicate key update job=values(job),location=values(location),lastupdate=values(lastupdate),company=values(company),annualsalary=values(annualsalary),salary=values(salary),education=values(education),website=values(website);".format(res[n]["id"],res[n]["name"],res[n]["city"],res[n]["category"]["updated_at"],res[n]["company"]["brand"],annual(ave(SalNum(res[n]["salary"]))),res[n]["salary"]))
                 conn.commit()
             except Exception:
-                logging.info(str(p)+str(n))
+                logging.info(str(p)+','+str(n))
             soup = bs(requests.get("https://www.yourator.co"+res[n]["path"]).text,'lxml')
 
             for i,e in enumerate(soup.select("h2.job-heading")):
@@ -50,10 +88,10 @@ def main(ser :str) -> str:
                         if l == []:
                            l=[t.text.replace("'","").replace("\n","。") for t in soup.select("section.content__area")[i].select("p")]
                         j=json.dumps(l,ensure_ascii=False)
-                        cursor.execute("update career.yourator set description='{}' where id={};".format(j,res[n]["id"]))
+                        cursor.execute("update career.newjob set description='{}' where id='{}';".format(j,res[n]["id"]))
                         conn.commit()
                     except Exception as m:
-                        logging.info(str(p)+str(n)+str(res[n]["id"])+res[n]["name"]+e.text+str(m))
+                        logging.info(str(p)+','+str(n)+','+str(res[n]["id"])+','+res[n]["name"]+','+e.text+','+str(m))
 
                 if e.text == "條件要求":
                     try:
@@ -61,21 +99,21 @@ def main(ser :str) -> str:
                         if l == []:
                             l=[t.text.replace("'","").replace("\n","。") for t in soup.select("section.content__area")[i].select("p")]
                         j=json.dumps(l,ensure_ascii=False)
-                        cursor.execute("update career.yourator set skill='{}' where id={};".format(j,res[n]["id"]))
+                        cursor.execute("update career.newjob set skill='{}' where id='{}';".format(j,res[n]["id"]))
                         conn.commit()
                     except Exception as m:
-                        logging.info(str(p)+str(n)+str(res[n]["id"])+res[n]["name"]+e.text+str(m))
+                        logging.info(str(p)+','+str(n)+','+str(res[n]["id"])+','+res[n]["name"]+','+e.text+','+str(m))
 
-                if e.text == "加分條件":
-                    try:
-                        l=[t.text.replace("'","").replace("\n","。") for t in soup.select("section.content__area")[i].select("li")]
-                        if l == []:
-                            l=[t.text.replace("'","").replace("\n","。") for t in soup.select("section.content__area")[i].select("p")]
-                        j=json.dumps(l,ensure_ascii=False)
-                        cursor.execute("update career.yourator set skilloption='{}' where id={};".format(j,res[n]["id"]))
-                        conn.commit()
-                    except Exception as m:
-                        logging.info(str(p)+str(n)+str(res[n]["id"])+res[n]["name"]+e.text+str(m))
+                # if e.text == "加分條件":
+                #     try:
+                #         l=[t.text.replace("'","").replace("\n","。") for t in soup.select("section.content__area")[i].select("li")]
+                #         if l == []:
+                #             l=[t.text.replace("'","").replace("\n","。") for t in soup.select("section.content__area")[i].select("p")]
+                #         j=json.dumps(l,ensure_ascii=False)
+                #         cursor.execute("update career.yourator set skilloption='{}' where id={};".format(j,res[n]["id"]))
+                #         conn.commit()
+                #     except Exception as m:
+                #         logging.info(str(p)+','+str(n)+','+str(res[n]["id"])+','+res[n]["name"]+','+e.text+','+str(m))
 
                 if e.text == "員工福利":
                     try:
@@ -83,10 +121,10 @@ def main(ser :str) -> str:
                         if l == []:
                             l=[t.text.replace("'","").replace("\n","。") for t in soup.select("section.content__area")[i].select("p")]
                         j=json.dumps(l,ensure_ascii=False)
-                        cursor.execute("update career.yourator set benefits='{}' where id={};".format(j,res[n]["id"]))
+                        cursor.execute("update career.newjob set benefits='{}' where id='{}';".format(j,res[n]["id"]))
                         conn.commit()
                     except Exception as m:
-                        logging.info(str(p)+str(n)+str(res[n]["id"])+res[n]["name"]+e.text+str(m))
+                        logging.info(str(p)+','+str(n)+','+str(res[n]["id"])+','+res[n]["name"]+','+e.text+','+str(m))
             time.sleep(random.uniform(2, 4))
         time.sleep(random.uniform(5, 8))
     cursor.close()
