@@ -1,8 +1,6 @@
 import datetime
 import logging
-
 import azure.functions as func
-
 from lxml import html
 from bs4 import BeautifulSoup as bs
 import requests
