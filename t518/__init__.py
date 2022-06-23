@@ -102,7 +102,6 @@ def main(mytimer: func.TimerRequest) -> None:
     cur.close()
     con.commit()
     con.close()
-
     logging.info('已更新'+str(pstop)+'頁查詢至518')
 
     if mytimer.past_due:
