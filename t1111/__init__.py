@@ -1,8 +1,6 @@
 import datetime
 import logging
-
 import azure.functions as func
-
 from lxml import html
 from bs4 import BeautifulSoup as bs
 import requests
@@ -176,9 +174,7 @@ def main(mytimer: func.TimerRequest) -> None:
     cur.close()
     con.commit()
     con.close()
-
     logging.info('已更新查詢至1111')
-
 
     if mytimer.past_due:
         logging.info('The timer is past due!')
