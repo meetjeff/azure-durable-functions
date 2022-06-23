@@ -10,7 +10,6 @@ from bs4 import  BeautifulSoup as bs
 import cn2an
 import nums_from_string as nfs
 
-
 def SalNum(i):
     ex = i
     ex1 = ex.replace(",", ".")
