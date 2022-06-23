@@ -1,14 +1,10 @@
 import datetime
 import logging
-
 import azure.functions as func
-
 from bs4 import  BeautifulSoup as bs
 import requests
 import pymysql
 import time,random
-
-
 
 def main(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
