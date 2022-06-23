@@ -8,3 +8,5 @@ requests
 pymysql
 beautifulsoup4
 lxml
+nums_from_string
+cn2an
