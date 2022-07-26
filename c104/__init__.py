@@ -7,7 +7,10 @@ import json
 import pymysql
 import time,random
 import logging
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def main(ser:str) -> str:
 
@@ -101,10 +104,10 @@ def main(ser:str) -> str:
             logging.info('第'+str(i)+'筆'+str(m))
 
     con = pymysql.connect(
-        host= "azsqltop.mysql.database.azure.com",
-        port= 3306,
-        user= "jeff",
-        password= "@a0987399832",
+        host = os.getenv("dbip"),
+        user = os.getenv("dbuser"),
+        password = os.getenv("dbpassword"),
+        port = int(os.getenv("dbport")),
         database = "career")
     cur = con.cursor()
 
