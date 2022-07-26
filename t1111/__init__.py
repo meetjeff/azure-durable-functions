@@ -7,6 +7,10 @@ import requests
 import pymysql
 import cn2an
 import nums_from_string as nfs
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def SalNum(i):
     ex = i
@@ -155,10 +159,10 @@ def main(mytimer: func.TimerRequest) -> None:
             break        
 
     con = pymysql.connect(
-        host= 'azsqltop.mysql.database.azure.com',
-        port= 3306,
-        user= "jeff",
-        password= "@a0987399832",
+        host = os.getenv("dbip"),
+        user = os.getenv("dbuser"),
+        password = os.getenv("dbpassword"),
+        port = int(os.getenv("dbport")),
         db= "career")
 
     cur = con.cursor()
