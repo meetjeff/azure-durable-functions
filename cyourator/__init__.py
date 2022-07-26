@@ -9,6 +9,10 @@ import pymysql
 from bs4 import  BeautifulSoup as bs
 import cn2an
 import nums_from_string as nfs
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def SalNum(i):
     ex = i
@@ -54,10 +58,10 @@ def main(ser:str) -> str:
     logging.info('Yourator Start Search')
 
     db_settings = {
-        "host": "azsqltop.mysql.database.azure.com",
-        "port": 3306,
-        "user": "jeff",
-        "password": "@a0987399832",
+        "host": os.getenv("dbip"),
+        "port": int(os.getenv("dbport")),
+        "user": os.getenv("dbuser"),
+        "password": os.getenv("dbpassword")
     }
     conn = pymysql.connect(**db_settings)
     cursor = conn.cursor()
