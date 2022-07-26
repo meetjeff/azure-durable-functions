@@ -9,6 +9,10 @@ import pymysql
 import time,random
 import nums_from_string as nfs
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def SalNum(i):
     ex = i
@@ -84,10 +88,10 @@ def main(ser:str) -> str:
         time.sleep(random.uniform(3, 5))
     
     con = pymysql.connect(
-        host= 'azsqltop.mysql.database.azure.com',
-        port= 3306,
-        user= "jeff",
-        password='@a0987399832',
+        host = os.getenv("dbip"),
+        user = os.getenv("dbuser"),
+        password = os.getenv("dbpassword"),
+        port = int(os.getenv("dbport")),
         database='career')
 
     cur = con.cursor()
