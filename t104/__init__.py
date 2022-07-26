@@ -5,6 +5,10 @@ from bs4 import  BeautifulSoup as bs
 import requests
 import pymysql
 import time,random
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def main(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
@@ -96,10 +100,10 @@ def main(mytimer: func.TimerRequest) -> None:
             logging.info('第'+str(i)+'筆'+str(m))
 
     con = pymysql.connect(
-        host= "azsqltop.mysql.database.azure.com",
-        port= 3306,
-        user= "jeff",
-        password= "@a0987399832",
+        host = os.getenv("dbip"),
+        user = os.getenv("dbuser"),
+        password = os.getenv("dbpassword"),
+        port = int(os.getenv("dbport")),
         database = "career")
     cur = con.cursor()
 
