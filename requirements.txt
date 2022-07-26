@@ -10,3 +10,4 @@ beautifulsoup4
 lxml
 nums_from_string
 cn2an
+python-dotenv
