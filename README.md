@@ -1,6 +1,6 @@
 # Job Vacancies Analysis
 ### 從各大求職平台自動化蒐集職缺資料，進行數據分析、橫向對比，根據需求手動執行爬取網站、輸入關鍵字、多面向篩選資料庫數據。
-##### Project Leader | Data Engineer
+:technologist: Project Leader | Data Engineer
 <br>
 
 ![data job7](https://user-images.githubusercontent.com/106952571/187528508-46c8fb2c-f593-4515-bfe7-3614e9319d47.jpg)
